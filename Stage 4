@@ -1,0 +1,57 @@
+# write your code here
+import math
+import argparse
+
+
+# lp = loan_principal
+# mp = monthly_payment
+# li = loan_interest
+# np = number_of_periods
+# m_ir = monthly interest rate
+
+
+parser = argparse.ArgumentParser(description="This program calculates Differentiate or Annuity payment.")
+
+parser.add_argument("--type", help='indicates types of payments: "diff" (differentiated) or "annuity".', type=str)
+parser.add_argument("--payment", help="monthly payment", type=int)
+parser.add_argument("--principal", help="loan principal is used to both calculations", type=int)
+parser.add_argument("--periods", help="number of periods is used to both calculations", type=int)
+parser.add_argument("--interest", help="loan interest in % is used to both calculations", type=float)
+
+args = parser.parse_args()
+
+lp = args.principal
+mp = args.payment
+li = args.interest
+np = args.periods
+tp = args.type
+
+def differentiated_payment(lp, np, li):
+    m = 0
+    sd = []
+    while m != np:
+        m_ir = li / 100 * (1 / 12)
+        m = m + 1
+        d = lp / np + m_ir * (lp - (lp * (m - 1)) / np)
+        print(f'Month {m}: payment is {round(d, 2)}')
+        sd.append(d)
+    print(f'Overpayment = {round(sum(sd) - lp, 2)}')
+
+def annuity_payment(np, mp, li):
+    
+    n_ir = li * 0.01 / 12
+
+    a = int(lp * (n_ir * pow(1 + n_ir, np) / (pow(1 + n_ir, np) - 1))) + 1
+    print(f'Your monthly payment = {a}!')
+
+
+if tp == 'diff':
+    try:
+        differentiated_payment(lp, np, li)
+    except TypeError:
+        print('Incorrect parameters')
+elif tp == 'annuity':
+    try:
+        annuity_payment(lp, np, li)
+    except TypeError:
+        print('Incorrect parameters')
